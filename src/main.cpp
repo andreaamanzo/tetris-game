@@ -1,6 +1,7 @@
 #include "Settings.h"
 #include "tetrominoes.h"
 #include "Board.h"
+#include "Panel.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <array>
@@ -8,9 +9,7 @@
 
 int main()
 {
-  sf::Font font;
-  if (!font.loadFromFile("../fonts/arial_narrow_7/arial_narrow_7.ttf")) 
-    throw std::runtime_error("Error while loading font (arial_narrow_7.ttf)");
+  Panel::loadFont();
 
   sf::RenderWindow window(sf::VideoMode(Settings::window_w, Settings::window_h), "Tetris");
   window.setFramerateLimit(60);
@@ -21,16 +20,19 @@ int main()
   panel.setPosition(Settings::board_w, 0.f);
   panel.setFillColor(sf::Color{ 20, 20, 20 });
 
+  Panel nextPanel{ Settings::panel_w - Settings::size, 4 * Settings::size };
+  nextPanel.setPosition(panel.getPosition().x + Settings::size / 2, Settings::window_h / 4 - nextPanel.getHeight() / 2);
+  nextPanel.setTitle("Next");
+
+  Panel scorePanel{ Settings::panel_w - Settings::size, 4 * Settings::size };
+  scorePanel.setPosition(panel.getPosition().x + Settings::size / 2, nextPanel.getHeight() + nextPanel.getHeight() * 2);
+  scorePanel.setTitle("Score");
+
   Tetromino currTet{ getRandomTetromino(Settings::size) };
   currTet.setPos(Settings::spawn_tetromino_x, -static_cast<float>(Settings::size * 2));
   Tetromino nextTet{ getRandomTetromino(Settings::size) };
-  nextTet.setPos(Settings::next_tet_x, Settings::next_tet_y);
 
   Tetromino shadow{ getShadow(currTet) };
-
-  sf::Text scoreText{ "", font, 30 };
-  scoreText.setFillColor(sf::Color::White);
-  scoreText.setPosition(Settings::score_text_x, Settings::score_text_y);
 
   int downDeley{ 30 };
   int downCount{ downDeley };
@@ -199,9 +201,8 @@ int main()
 
       currTet = nextTet;
       currTet.setPos(Settings::spawn_tetromino_x, -static_cast<float>(Settings::size * 2));
-      nextTet = getRandomTetromino(Settings::size);
-      nextTet.setPos(Settings::next_tet_x, Settings::next_tet_y);
       shadow = getShadow(currTet);
+      nextTet = getRandomTetromino(Settings::size);
       collision = false;
     }
 
@@ -210,8 +211,10 @@ int main()
     window.clear();
 
     window.draw(panel);
-    scoreText.setString("Score: " + std::to_string(score));
-    window.draw(scoreText);
+    nextPanel.drawInside(nextTet, window);
+    nextPanel.draw(window);
+    scorePanel.draw(window);
+    scorePanel.drawInside(std::to_string(score), window);
     board.draw(window);
     shadow.draw(window);
     currTet.draw(window);
