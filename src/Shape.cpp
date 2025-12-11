@@ -35,7 +35,7 @@ void Shape::setPos(float x, float y)
   for (auto& cell : m_cells)
   {
     auto [prevX, prevY]{ cell.getPos() };
-    cell.setPos(prevX + diffX, prevY + diffY);
+    cell.setPos({ prevX + diffX, prevY + diffY });
   }
 }
 

@@ -63,7 +63,7 @@ void Board::deleteRow(int y)
       {
         float nx{ cell.get()->getPos().x };
         float ny{ cell.get()->getPos().y + cell.get()->getSize() };
-        cell.get()->setPos(nx, ny);
+        cell.get()->setPos({ nx, ny });
       }
     }
   }

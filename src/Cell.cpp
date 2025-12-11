@@ -8,7 +8,7 @@ Cell::Cell(float size, sf::Color color, float x, float y)
   m_rect.setFillColor(color);
   m_rect.setOutlineColor(sf::Color::Black);
   enableBorders(true);
-  m_rect.setPosition(x, y);
+  m_rect.setPosition(sf::Vector2f{ x, y });
 }
 
 Cell::Cell(float size, sf::Color color, const sf::Vector2f& pos)
@@ -23,11 +23,6 @@ const sf::RectangleShape& Cell::getRect() const
 void Cell::draw(sf::RenderWindow& window) const
 {
   window.draw(m_rect);
-}
-
-void Cell::setPos(float x, float y)
-{
-  m_rect.setPosition(x, y);
 }
 
 void Cell::setPos(const sf::Vector2f& pos)

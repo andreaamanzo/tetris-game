@@ -21,11 +21,14 @@ target_include_directories(Tetris
         ${CMAKE_SOURCE_DIR}/include
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE
-  sfml-graphics
-  sfml-window
-  sfml-system
+find_package(SFML 2.5 REQUIRED COMPONENTS graphics window system)
+
+target_link_libraries(Tetris PRIVATE
+    sfml-graphics
+    sfml-window
+    sfml-system
 )
+
 
 # Opzioni di compilazione
 target_compile_options(Tetris PRIVATE

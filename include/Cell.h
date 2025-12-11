@@ -11,7 +11,6 @@ public:
 
   const sf::RectangleShape& getRect() const;
   void draw(sf::RenderWindow& window) const;
-  void setPos(float x, float y);
   void setPos(const sf::Vector2f& pos);
   void setColor(sf::Color color);
   void enableBorders(bool set);

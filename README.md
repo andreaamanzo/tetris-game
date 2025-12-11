@@ -1,39 +1,35 @@
 # Tetris Game
 
-A simple Tetris game written in C++ and built with CMake.  
-This project implements the basic mechanics of the classic Tetris: falling pieces, movement, rotation, collision detection, and line clearing.
+A simple Tetris game written in modern C++ and built with CMake.  
+This project implements the essential mechanics of the classic Tetris: falling tetrominoes, rotation, movement, line clearing, scoring, and game-over detection.
+
+The goal of this project is to provide a clean and readable codebase for learning game logic and SFML rendering.
 
 ## Requirements
 
-- C++ compiler (g++, clang, or MSVC)
-- CMake 3.x or higher
+- C++20 compiler (g++, clang, or MSVC)
+- CMake 3.15+
+- **SFML 2.5.x (Linux/macOS)** 
+  > ⚠️ On macOS, Homebrew now installs SFML 3 by default, which is not compatible with this project.  
+  > You must install SFML 2.5 manually.
 
-## Install g++ and CMake
+## Install Dependencies
 
-### Linux (Debian/Ubuntu-based)
+### Linux (Ubuntu / Debian-based)
 
 ```bash
 sudo apt update
-sudo apt install -y build-essential cmake
+sudo apt install -y build-essential cmake libsfml-dev
 ```
 
-This will install `g++`, `make`, and `cmake`.
-
-### macOS (with Homebrew)
-
-First install Homebrew if you don't have it:
+### Linux (Arch-based)
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+sudo pacman -Syu
+sudo pacman -S gcc cmake make sfml
 ```
 
-Then install the tools:
-
-```bash
-brew install gcc cmake
-```
-
-## Build
+## Build Instructions
 
 ```bash
 git clone https://github.com/andreaamanzo/tetris-game.git
@@ -54,11 +50,17 @@ From the `build` directory, you can start the game with:
 
 ## Controls
 
+### Gameplay
 - **Up Arrow**: rotate the block  
 - **Left Arrow**: move block left  
 - **Right Arrow**: move block right  
-- **Down Arrow**: soft drop (faster descent)  
-- **Enter**: hard drop (instantly place the block)
+- **Down Arrow**: soft drop  
+- **Enter**: hard drop  
+
+### Game actions
+- **P**: pause  
+- **R**: restart  
+- **Q**: quit  
 
 ## Project Status
 
