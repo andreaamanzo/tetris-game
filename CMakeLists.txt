@@ -2,37 +2,41 @@ cmake_minimum_required(VERSION 3.15)
 
 project(Tetris LANGUAGES CXX)
 
-# Standard C++
+# C++ standard configuration
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Colleziona i sorgenti automaticamente
+# Automatically collect source files
 file(GLOB_RECURSE SOURCES
-    src/main.cpp
-    src/*.cpp
+  src/main.cpp
+  src/*.cpp
 )
 
-# Crea l'eseguibile
+# Create executable
 add_executable(Tetris ${SOURCES})
 
-# Directory include pubblica
+# Public include directory for project headers
 target_include_directories(Tetris
-    PUBLIC
-        ${CMAKE_SOURCE_DIR}/include
+  PUBLIC
+    ${CMAKE_SOURCE_DIR}/include
 )
 
-find_package(SFML 2.5 REQUIRED COMPONENTS graphics window system)
+# Use SFML static libraries (SFML 3 was built statically on your system)
+set(SFML_STATIC_LIBRARIES TRUE)
 
+# Find SFML 3 components
+find_package(SFML 3 COMPONENTS System Window Graphics REQUIRED)
+
+# Link against SFML libraries
 target_link_libraries(Tetris PRIVATE
-    sfml-graphics
-    sfml-window
-    sfml-system
+  SFML::System
+  SFML::Window
+  SFML::Graphics
 )
 
-
-# Opzioni di compilazione
+# Compiler warnings and safety checks
 target_compile_options(Tetris PRIVATE
-    -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion 
-    -Wcast-align -Wcast-qual -Wold-style-cast -Woverloaded-virtual 
-    -Wnon-virtual-dtor -Weffc++ -Wundef -Wuninitialized 
+  -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion 
+  -Wcast-align -Wcast-qual -Wold-style-cast -Woverloaded-virtual 
+  -Wnon-virtual-dtor -Weffc++ -Wundef -Wuninitialized 
 )

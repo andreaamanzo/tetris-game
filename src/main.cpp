@@ -2,19 +2,21 @@
 #include "tetrominoes.h"
 #include "Board.h"
 #include "Panel.h"
+#include <optional>
 #include <SFML/Graphics.hpp>
 
 int main()
 {
-  Panel::loadFont();
+  Panel::loadFont();  
 
-  sf::RenderWindow window(sf::VideoMode(Settings::window_w, Settings::window_h), "Tetris");
+  sf::VideoMode mode({ Settings::window_w, Settings::window_h });
+  sf::RenderWindow window(mode, "Tetris");
   window.setFramerateLimit(60);
   
   Board board{ Settings::columns, Settings::rows };
   
   sf::RectangleShape panel{ sf::Vector2f{ Settings::panel_w, Settings::window_h } };
-  panel.setPosition(Settings::board_w, 0.f);
+  panel.setPosition({ Settings::board_w, 0.f });
   panel.setFillColor(sf::Color{ 20, 20, 20 });
 
   Panel nextPanel{ Settings::panel_w - Settings::size, 4 * Settings::size };
@@ -45,20 +47,34 @@ int main()
 
   while (window.isOpen())
   {
-    sf::Event event;
-    while (window.pollEvent(event))
+    while (const std::optional event = window.pollEvent())
     {
-      if (event.type == sf::Event::Closed)
-        window.close();
-      if (event.type == sf::Event::KeyPressed)
+      if (event->is<sf::Event::Closed>())
       {
-        if (event.key.code == sf::Keyboard::Q) window.close();
-        if (event.key.code == sf::Keyboard::P) pause = !pause;
-        if (event.key.code == sf::Keyboard::R)
+        window.close();
+        continue;
+      }
+
+      if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
+      {
+        const auto key{ keyPressed->code };
+
+        if (key == sf::Keyboard::Key::Q)
+        {
+          window.close();
+        }
+        else if (key == sf::Keyboard::Key::P)
+        {
+          pause = !pause;
+        }
+        else if (key == sf::Keyboard::Key::R)
         {
           board.clear();
           currTet = getRandomTetromino(Settings::size);
-          currTet.setPos(Settings::spawn_tetromino_x, -static_cast<float>(Settings::size * 2));
+          currTet.setPos(
+            Settings::spawn_tetromino_x,
+            -static_cast<float>(Settings::size * 2)
+          );
           nextTet = getRandomTetromino(Settings::size);
           shadow = getShadow(currTet);
           score = 0;
@@ -119,7 +135,7 @@ int main()
     if (moveCount <= 0)
     {
       keyMovePressed = false;
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
       {
         currTet.stepRight();
         if (!board.checkValidPosition(currTet))
@@ -127,7 +143,7 @@ int main()
         moveCount = moveDeley;
         keyMovePressed = true;
       }
-      else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+      else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
       {
         currTet.stepLeft();
         if (!board.checkValidPosition(currTet))
@@ -135,7 +151,7 @@ int main()
         moveCount = moveDeley;
         keyMovePressed = true;
       }
-      else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+      else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
       {
         currTet.rotate();
         if (!board.checkValidPosition(currTet))
@@ -151,14 +167,14 @@ int main()
 
     --moveCount;
 
-    bool currEnterPressed{ sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) };
+    bool currEnterPressed{ sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter) };
     bool allDownPressed{ false };
     if (currEnterPressed && !prevEnterPressed)
     {
       allDownPressed = true;
       downCount = -1;
     }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
     {
       downCount -= 4;
     }
@@ -178,7 +194,7 @@ int main()
       else
       {
         currTet.stepDown();
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) ++score;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) ++score;
       }
 
       downCount = downDeley;

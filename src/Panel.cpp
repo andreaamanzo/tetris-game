@@ -5,10 +5,10 @@
 
 Panel::Panel(float width, float height, sf::Color color, float x, float y)
   : m_rect{ sf::Vector2f{ width, height} }
-  , m_title{ "", s_font, Settings::size }
+  , m_title{ s_font, "", Settings::size }
 {
   m_rect.setFillColor(color);
-  m_rect.setPosition(x, y);
+  m_rect.setPosition({ x, y });
   m_title.setFillColor(sf::Color::White);
 }
 
@@ -17,7 +17,7 @@ float Panel::getWidth()  const { return m_rect.getSize().x; }
 
 void Panel::setPosition(float x, float y)
 {
-  m_rect.setPosition(x, y);
+  m_rect.setPosition({ x, y });
 }
 
 void Panel::setTitle(const std::string& title)
@@ -25,17 +25,18 @@ void Panel::setTitle(const std::string& title)
   m_title.setString(title);
 
   sf::FloatRect textBounds{ m_title.getLocalBounds() };
-  m_title.setOrigin(
-    textBounds.left + textBounds.width / 2.f,
-    textBounds.top + textBounds.height
-  );
+  m_title.setOrigin({
+    textBounds.position.x + textBounds.size.x / 2.f,
+    textBounds.position.y + textBounds.size.y
+  });
+
 
   sf::FloatRect rectBounds{ m_rect.getGlobalBounds() };
 
-  m_title.setPosition(
-    rectBounds.left + rectBounds.width / 2.f,
-    rectBounds.top - Settings::size
-  );
+  m_title.setPosition({
+    rectBounds.position.x + rectBounds.size.x / 2.f,
+    rectBounds.position.y - Settings::size
+  });
 }
 
 void Panel::draw(sf::RenderWindow& window) const
@@ -51,8 +52,8 @@ void Panel::drawInside(Tetromino& tetr, sf::RenderWindow& window) const
   float tetrWidth{ tetr.getEndPos().x - tetr.getStartPos().x };
   float tetrHeight{ tetr.getEndPos().y - tetr.getStartPos().y };
 
-  float panelCenterX{ rectBounds.left + rectBounds.width  / 2.f };
-  float panelCenterY{ rectBounds.top  + rectBounds.height / 2.f };
+  float panelCenterX{ rectBounds.position.x + rectBounds.size.x / 2.f };
+  float panelCenterY{ rectBounds.position.y + rectBounds.size.y / 2.f };
 
   float newStartX{ panelCenterX - tetrWidth  / 2.f };
   float newStartY{ panelCenterY - tetrHeight / 2.f };
@@ -65,26 +66,27 @@ void Panel::drawInside(Tetromino& tetr, sf::RenderWindow& window) const
 
 void Panel::drawInside(const std::string& str, sf::RenderWindow& window) const
 {
-  sf::Text text{ str, s_font, Settings::size };
+  sf::Text text{ s_font, str, Settings::size };
 
-  sf::FloatRect textBounds{ text.getLocalBounds() };
-  text.setOrigin(
-    textBounds.left + textBounds.width / 2.f,
-    textBounds.top + textBounds.height / 2.f
-  );
+  const sf::FloatRect textBounds{ text.getLocalBounds() };
+  text.setOrigin({
+    textBounds.position.x + textBounds.size.x / 2.f,
+    textBounds.position.y + textBounds.size.y / 2.f
+  });
 
-  sf::FloatRect rectBounds{ m_rect.getGlobalBounds() };
-
-  text.setPosition(
-    rectBounds.left + rectBounds.width / 2.f,
-    rectBounds.top + rectBounds.height / 2.f
-  );
+  const sf::FloatRect rectBounds{ m_rect.getGlobalBounds() };
+  text.setPosition({
+    rectBounds.position.x + rectBounds.size.x / 2.f,
+    rectBounds.position.y + rectBounds.size.y / 2.f
+  });
 
   window.draw(text);
 }
 
 void Panel::loadFont()
 {
-  if (!s_font.loadFromFile("../fonts/arial_narrow_7/arial_narrow_7.ttf"))
-    throw std::runtime_error("Error while loading font (arial_narrow_7.ttf)");
+  const std::string path{ "../fonts/arial_narrow_7/arial_narrow_7.ttf" };
+
+  if (!s_font.openFromFile(path))
+    throw std::runtime_error("Error loading font: " + path);
 }

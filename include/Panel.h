@@ -22,7 +22,7 @@ public:
 private:
   inline static sf::Font s_font;
   sf::RectangleShape m_rect{};
-  sf::Text m_title{};
+  sf::Text m_title;
 };
 
 
