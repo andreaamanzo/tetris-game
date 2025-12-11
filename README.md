@@ -3,8 +3,6 @@
 A simple Tetris game written in modern C++ and built with CMake.  
 This project implements the essential mechanics of the classic Tetris: falling tetrominoes, rotation, movement, line clearing, scoring, and game-over detection.
 
-The goal of this project is to provide a clean and readable codebase for learning game logic and rendering using **SFML 3**.
-
 ---
 
 ## Requirements
@@ -60,6 +58,8 @@ sudo pacman -S gcc cmake make sfml
 If your Arch repository still provides SFML 2.x, you must build SFML 3 manually
 (from source using CMake), because the provided install_sfml3.sh script is intended
 for Ubuntu/Debian and will **not** work on Arch.
+
+---
 
 ### macOS (Homebrew)
 
