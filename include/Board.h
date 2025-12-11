@@ -21,6 +21,7 @@ public:
   void draw(sf::RenderWindow& window) const;
   int getHeigth() const;
   int getWidth() const;
+  void clear();
 
 private:
   using Rows = std::vector<std::shared_ptr<Cell>>;

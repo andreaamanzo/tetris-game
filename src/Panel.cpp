@@ -48,14 +48,14 @@ void Panel::drawInside(Tetromino& tetr, sf::RenderWindow& window) const
 {
   sf::FloatRect rectBounds{ m_rect.getGlobalBounds() };
 
-  float tetrWidth  = tetr.getEndPos().x - tetr.getStartPos().x;
-  float tetrHeight = tetr.getEndPos().y - tetr.getStartPos().y;
+  float tetrWidth{ tetr.getEndPos().x - tetr.getStartPos().x };
+  float tetrHeight{ tetr.getEndPos().y - tetr.getStartPos().y };
 
   float panelCenterX{ rectBounds.left + rectBounds.width  / 2.f };
   float panelCenterY{ rectBounds.top  + rectBounds.height / 2.f };
 
-  float newStartX = panelCenterX - tetrWidth  / 2.f;
-  float newStartY = panelCenterY - tetrHeight / 2.f;
+  float newStartX{ panelCenterX - tetrWidth  / 2.f };
+  float newStartY{ panelCenterY - tetrHeight / 2.f };
 
   tetr.setPos(newStartX, newStartY);
 

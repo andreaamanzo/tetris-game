@@ -3,9 +3,6 @@
 #include "Board.h"
 #include "Panel.h"
 #include <SFML/Graphics.hpp>
-#include <iostream>
-#include <array>
-#include <memory>
 
 int main()
 {
@@ -25,7 +22,7 @@ int main()
   nextPanel.setTitle("Next");
 
   Panel scorePanel{ Settings::panel_w - Settings::size, 4 * Settings::size };
-  scorePanel.setPosition(panel.getPosition().x + Settings::size / 2, nextPanel.getHeight() + nextPanel.getHeight() * 2);
+  scorePanel.setPosition(panel.getPosition().x + Settings::size / 2, nextPanel.getHeight() + nextPanel.getHeight() * 1.5f);
   scorePanel.setTitle("Score");
 
   Tetromino currTet{ getRandomTetromino(Settings::size) };
@@ -38,11 +35,12 @@ int main()
   int downCount{ downDeley };
   int moveDeley{ 10 };
   int moveCount{ moveDeley };
-  int deleteDeley{ 15 };
+  int deleteDeley{ 20 };
   int deleteCount{ deleteDeley };
 
   bool prevEnterPressed{ false };
   bool gameOver{ false };
+  bool pause{ false };
   int score{ 0 };
 
   while (window.isOpen())
@@ -55,8 +53,23 @@ int main()
       if (event.type == sf::Event::KeyPressed)
       {
         if (event.key.code == sf::Keyboard::Q) window.close();
+        if (event.key.code == sf::Keyboard::P) pause = !pause;
+        if (event.key.code == sf::Keyboard::R)
+        {
+          board.clear();
+          currTet = getRandomTetromino(Settings::size);
+          currTet.setPos(Settings::spawn_tetromino_x, -static_cast<float>(Settings::size * 2));
+          nextTet = getRandomTetromino(Settings::size);
+          shadow = getShadow(currTet);
+          score = 0;
+          gameOver = false;
+          pause = false;
+        }
       }
     }
+
+    if (pause)
+      continue;
 
     if (gameOver)
       continue;
@@ -102,14 +115,17 @@ int main()
       
     //* ------------------ MOVE ----------------------
 
+    bool keyMovePressed{ true };
     if (moveCount <= 0)
     {
+      keyMovePressed = false;
       if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
       {
         currTet.stepRight();
         if (!board.checkValidPosition(currTet))
           currTet.stepLeft();
         moveCount = moveDeley;
+        keyMovePressed = true;
       }
       else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
       {
@@ -117,6 +133,7 @@ int main()
         if (!board.checkValidPosition(currTet))
           currTet.stepRight();
         moveCount = moveDeley;
+        keyMovePressed = true;
       }
       else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
       {
@@ -128,6 +145,7 @@ int main()
         }
         shadow = getShadow(currTet);
         moveCount = moveDeley;
+        keyMovePressed = true;
       }
     }
 
@@ -184,7 +202,7 @@ int main()
       collision = true;
     }
 
-    if (collision)
+    if (collision && !keyMovePressed)
     {
       for (const auto& cell : currTet.getCells())
       {

@@ -96,3 +96,11 @@ bool Board::isCompletedRow(int y) const
   return true;
 }
 
+void Board::clear()
+{
+  for (auto& row : m_grid)
+    for (auto& cell : row)
+      cell.reset();
+
+}
+
