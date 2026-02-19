@@ -3,7 +3,23 @@
 #include "Board.h"
 #include "Panel.h"
 #include <optional>
+#include <chrono>
 #include <SFML/Graphics.hpp>
+
+bool increse_speed()
+{
+  using clock = std::chrono::steady_clock;
+  static auto last{ clock::now() };
+  static std::chrono::seconds delay{ 20 };
+
+  auto now{ clock::now() };
+  if (now - last >= delay) 
+  {
+    last = now; 
+    return true;
+  }
+  return false;
+}
 
 int main()
 {
@@ -89,6 +105,9 @@ int main()
 
     if (gameOver)
       continue;
+
+    if (increse_speed())
+      downDeley -= (downDeley > 5 ? 1 : 0);
 
     //* --------------- CHECK COMPLETED ROWS --------------------
 
