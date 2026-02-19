@@ -85,7 +85,7 @@ void Panel::drawInside(const std::string& str, sf::RenderWindow& window) const
 
 void Panel::loadFont()
 {
-  const std::string path{ "../fonts/arial_narrow_7/arial_narrow_7.ttf" };
+  const std::string path{ "fonts/arial_narrow_7/arial_narrow_7.ttf" };
 
   if (!s_font.openFromFile(path))
     throw std::runtime_error("Error loading font: " + path);

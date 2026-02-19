@@ -21,8 +21,11 @@ target_include_directories(Tetris
     ${CMAKE_SOURCE_DIR}/include
 )
 
-# Use SFML static libraries (SFML 3 was built statically on your system)
-set(SFML_STATIC_LIBRARIES TRUE)
+option(TETRIS_USE_SFML_STATIC "Link SFML statically (if available)" OFF)
+
+if(TETRIS_USE_SFML_STATIC)
+  set(SFML_STATIC_LIBRARIES TRUE)
+endif()
 
 # Find SFML 3 components
 find_package(SFML 3 COMPONENTS System Window Graphics REQUIRED)
@@ -32,6 +35,12 @@ target_link_libraries(Tetris PRIVATE
   SFML::System
   SFML::Window
   SFML::Graphics
+)
+
+add_custom_command(TARGET Tetris POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+          ${CMAKE_SOURCE_DIR}/fonts
+          $<TARGET_FILE_DIR:Tetris>/fonts
 )
 
 # Compiler warnings and safety checks

@@ -79,20 +79,32 @@ brew install cmake sfml
 ```bash
 git clone https://github.com/andreaamanzo/tetris-game.git
 cd tetris-game
-mkdir build
-cd build
-cmake ..
-make
+
+cmake -S . -B build
+cmake --build build
 ```
+
+## Linking SFML statically (optional)
+
+If on your system SFML 3 was built/installed as static libraries, you may need to enable
+static linking when configuring the project:
+
+```bash
+cmake -S . -B build -DTETRIS_USE_SFML_STATIC=ON
+cmake --build build
+```
+
+If you have both static and shared SFML installations, you may also need to point CMake to the
+correct one using SFML_DIR.
 
 ---
 
 ## Run the Game
 
-From the `build` directory:
+From the project root:
 
 ```bash
-./Tetris
+./build/Tetris
 ```
 
 ---
